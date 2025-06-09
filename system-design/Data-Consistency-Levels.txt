@@ -1,1 +1,33 @@
 Data consistency levels
+
+Consistency is a measure of how up to date the data is in a Distributed System.
+
+So, basically if you are getting updated data, then it's a strongly consistent system and if you are getting stale data then, it's a weakly
+consistent system.
+
+Data consistency levels is a representation how consistent the system is. Instead of asking programmer to check internal working and figuring
+how consistent the system is, data consistency level can indicate it.
+
+There are 3 different levels of data consistency:
+
+1. Linearizable Consistency
+ - This is the highest level of data consistency that a system can achieve. Linearizable system will make your system slowest compared to
+   other levels.
+ - So, read operation on such system will return the most up to date system.
+ - In such system, a request is processed, response is returned and then the next one is processed. Now if we receive a lot of such requests
+   it will take a lot of time to process the other requests. This creates a blocking also known as "Head of line" blocking.
+ - Another point to note is that if any request fails, and system goes down, then the rest of the requests don't get processed, which results
+   in system having high latency and low availability.
+
+# Latency is a measure of how much time it takes to respond. So since wait time can be higher in case of system with linearizable consistency,
+latency is higher.
+# Availability is a chance of getting a response. Since requests are in queue there is a less guarantee that it will be processed. So it has
+less availability.
+
+So such linearizable system can be implemented in two ways:
+- As if it is working on a single thread. So thread will complete request and return resopne and then pick up next one.
+- RAFT : RAFT is a consensus algorithm used in a distributed system where they can agree on a single source of truth. It ensures linearizability
+  by:
+    -> Electing a single leader to handle all client requests.
+    -> Ensuring writes are replicated to a majority (quorum) they are considered committed.
+    -> Making sure followers never serve stale data - they follow leaders log strictly.
